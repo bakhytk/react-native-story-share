@@ -332,123 +332,123 @@ public class RNStoryShareModule extends ReactContextBaseJavaModule {
     }
   }
 
-  private void _shareToSnapchat(
-      @Nullable File backgroundFile,
-      @Nullable File stickerFile,
-      @Nullable ReadableMap stickerOptions,
-      @Nullable String attributionLink,
-      @Nullable String captionText,
-      String media,
-      Promise promise
-  ) {
-    try {
-      Activity activity = getCurrentActivity();
-      SnapMediaFactory snapMediaFactory = SnapCreative.getMediaFactory(activity);
-      SnapContent snapContent;
-      SnapCreativeKitApi snapCreativeKitApi = SnapCreative.getApi(activity);
-
-      if (backgroundFile != null) {
-          if (media.equals(PHOTO)) {
-            SnapPhotoFile photoFile = snapMediaFactory.getSnapPhotoFromFile(backgroundFile);
-            snapContent = new SnapPhotoContent(photoFile);
-          } else {
-            SnapVideoFile videoFile = snapMediaFactory.getSnapVideoFromFile(backgroundFile);
-            snapContent = new SnapVideoContent(videoFile);
-          }
-
-      } else {
-        snapContent = new SnapLiveCameraContent();
-      }
-
-      if(stickerFile != null){
-        SnapSticker snapSticker = snapMediaFactory.getSnapStickerFromFile(stickerFile);
-
-        if(stickerOptions != null){
-          Integer width = stickerOptions.hasKey("width") ? stickerOptions.getInt("width") : null;
-          Integer height = stickerOptions.hasKey("height") ? stickerOptions.getInt("height") : null;
-
-          if(width != null){
-            snapSticker.setWidth(width);
-          }
-
-          if(height != null){
-            snapSticker.setHeight(height);
-          }
-        }
-
-        snapContent.setSnapSticker(snapSticker);
-      }
-
-      if(attributionLink != null){
-        snapContent.setAttachmentUrl(attributionLink);
-      }
-
-      if (captionText != null){
-        snapContent.setCaptionText(captionText);
-      }
-
-      snapCreativeKitApi.send(snapContent);
-      promise.resolve(SUCCESS);
-    } catch (SnapMediaSizeException e) {
-      promise.reject("RNStoryShare: Snapchat Exception", e.getMessage());
-    } catch (Exception e){
-      promise.reject(UNKNOWN_ERROR, e);
-    }
-  }
-
-  @ReactMethod
-  public void shareToSnapchat(ReadableMap config, Promise promise) {
-    try {
-      String backgroundAsset = config.hasKey("backgroundAsset") ? config.getString("backgroundAsset") : null;
-      String stickerAsset = config.hasKey("stickerAsset") ? config.getString("stickerAsset") : null;
-      ReadableMap stickerOptions = config.hasKey("stickerOptions") ? config.getMap("stickerOptions") : null;
-      String attributionLink = config.hasKey("attributionLink") ? config.getString("attributionLink") : null;
-      String captionText = config.hasKey("captionText") ? config.getString("captionText") : null;
-      String type = config.hasKey("type") ? config.getString("type") : FILE;
-      String media = config.hasKey("media") ? config.getString("media") : PHOTO;
-
-      File backgroundFile = null;
-      File stickerFile = null;
-
-      if (!type.equals(BASE64) && !type.equals(FILE)){
-        throw new Error(ERROR_TYPE_NOT_SUPPORTED);
-      }
-
-      if (!media.equals(PHOTO) && !media.equals(VIDEO)) {
-        throw new Error(ERROR_TYPE_NOT_SUPPORTED);
-      }
-
-      if (backgroundAsset == null && stickerAsset == null){
-        throw new Error("backgroundAsset and stickerAsset are not allowed to both be null.");
-      }
-
-      if (backgroundAsset != null){
-        if (type.equals(BASE64)){
-          backgroundFile = getFileFromBase64String(backgroundAsset);
-        } else {
-          backgroundFile = new File(backgroundAsset);
-        }
-
-        if(backgroundFile == null){
-          throw new Error("Could not create file from Base64 in RNStoryShare");
-        }
-      }
-
-      if (stickerAsset != null){
-        stickerFile = getFileFromBase64String(stickerAsset);
-
-        if(stickerFile == null){
-          throw new Error("Could not create file from Base64 in RNStoryShare");
-        }
-      }
-
-      _shareToSnapchat(backgroundFile, stickerFile, stickerOptions, attributionLink, captionText, media, promise);
-    } catch (Error e){
-      promise.reject(e.getMessage(), e);
-    } catch (Exception e){
-      promise.reject(UNKNOWN_ERROR, e);
-    }
-  }
+//   private void _shareToSnapchat(
+//       @Nullable File backgroundFile,
+//       @Nullable File stickerFile,
+//       @Nullable ReadableMap stickerOptions,
+//       @Nullable String attributionLink,
+//       @Nullable String captionText,
+//       String media,
+//       Promise promise
+//   ) {
+//     try {
+//       Activity activity = getCurrentActivity();
+//       SnapMediaFactory snapMediaFactory = SnapCreative.getMediaFactory(activity);
+//       SnapContent snapContent;
+//       SnapCreativeKitApi snapCreativeKitApi = SnapCreative.getApi(activity);
+//
+//       if (backgroundFile != null) {
+//           if (media.equals(PHOTO)) {
+//             SnapPhotoFile photoFile = snapMediaFactory.getSnapPhotoFromFile(backgroundFile);
+//             snapContent = new SnapPhotoContent(photoFile);
+//           } else {
+//             SnapVideoFile videoFile = snapMediaFactory.getSnapVideoFromFile(backgroundFile);
+//             snapContent = new SnapVideoContent(videoFile);
+//           }
+//
+//       } else {
+//         snapContent = new SnapLiveCameraContent();
+//       }
+//
+//       if(stickerFile != null){
+//         SnapSticker snapSticker = snapMediaFactory.getSnapStickerFromFile(stickerFile);
+//
+//         if(stickerOptions != null){
+//           Integer width = stickerOptions.hasKey("width") ? stickerOptions.getInt("width") : null;
+//           Integer height = stickerOptions.hasKey("height") ? stickerOptions.getInt("height") : null;
+//
+//           if(width != null){
+//             snapSticker.setWidth(width);
+//           }
+//
+//           if(height != null){
+//             snapSticker.setHeight(height);
+//           }
+//         }
+//
+//         snapContent.setSnapSticker(snapSticker);
+//       }
+//
+//       if(attributionLink != null){
+//         snapContent.setAttachmentUrl(attributionLink);
+//       }
+//
+//       if (captionText != null){
+//         snapContent.setCaptionText(captionText);
+//       }
+//
+//       snapCreativeKitApi.send(snapContent);
+//       promise.resolve(SUCCESS);
+//     } catch (SnapMediaSizeException e) {
+//       promise.reject("RNStoryShare: Snapchat Exception", e.getMessage());
+//     } catch (Exception e){
+//       promise.reject(UNKNOWN_ERROR, e);
+//     }
+//   }
+//
+//   @ReactMethod
+//   public void shareToSnapchat(ReadableMap config, Promise promise) {
+//     try {
+//       String backgroundAsset = config.hasKey("backgroundAsset") ? config.getString("backgroundAsset") : null;
+//       String stickerAsset = config.hasKey("stickerAsset") ? config.getString("stickerAsset") : null;
+//       ReadableMap stickerOptions = config.hasKey("stickerOptions") ? config.getMap("stickerOptions") : null;
+//       String attributionLink = config.hasKey("attributionLink") ? config.getString("attributionLink") : null;
+//       String captionText = config.hasKey("captionText") ? config.getString("captionText") : null;
+//       String type = config.hasKey("type") ? config.getString("type") : FILE;
+//       String media = config.hasKey("media") ? config.getString("media") : PHOTO;
+//
+//       File backgroundFile = null;
+//       File stickerFile = null;
+//
+//       if (!type.equals(BASE64) && !type.equals(FILE)){
+//         throw new Error(ERROR_TYPE_NOT_SUPPORTED);
+//       }
+//
+//       if (!media.equals(PHOTO) && !media.equals(VIDEO)) {
+//         throw new Error(ERROR_TYPE_NOT_SUPPORTED);
+//       }
+//
+//       if (backgroundAsset == null && stickerAsset == null){
+//         throw new Error("backgroundAsset and stickerAsset are not allowed to both be null.");
+//       }
+//
+//       if (backgroundAsset != null){
+//         if (type.equals(BASE64)){
+//           backgroundFile = getFileFromBase64String(backgroundAsset);
+//         } else {
+//           backgroundFile = new File(backgroundAsset);
+//         }
+//
+//         if(backgroundFile == null){
+//           throw new Error("Could not create file from Base64 in RNStoryShare");
+//         }
+//       }
+//
+//       if (stickerAsset != null){
+//         stickerFile = getFileFromBase64String(stickerAsset);
+//
+//         if(stickerFile == null){
+//           throw new Error("Could not create file from Base64 in RNStoryShare");
+//         }
+//       }
+//
+//       _shareToSnapchat(backgroundFile, stickerFile, stickerOptions, attributionLink, captionText, media, promise);
+//     } catch (Error e){
+//       promise.reject(e.getMessage(), e);
+//     } catch (Exception e){
+//       promise.reject(UNKNOWN_ERROR, e);
+//     }
+//   }
 
 
   private void canOpenUrl(String packageScheme, Promise promise){
@@ -469,8 +469,8 @@ public class RNStoryShareModule extends ReactContextBaseJavaModule {
     canOpenUrl(instagramScheme, promise);
   }
 
-  @ReactMethod
-  public void isSnapchatAvailable(Promise promise){
-    canOpenUrl(snapchatScheme, promise);
-  }
+//   @ReactMethod
+//   public void isSnapchatAvailable(Promise promise){
+//     canOpenUrl(snapchatScheme, promise);
+//   }
 }
